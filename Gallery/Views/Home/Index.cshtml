@@ -1,31 +1,85 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Index";
+}
+<div class="jumbotron">
+    <h2>
+        TASK: Pictures gallery via Azure Storage
+    </h2>
+
+</div>
+
+@using (Html.BeginForm("UploadAsync", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="fileUpload btn btn-default">
+        <input type="file" id="file" name="file" class="upload" onchange="DisplayFilesToUpload()" multiple />
+    </div>
+    <p id="FilesToUpload"></p>
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+    <div class="imageBlock">
+        <button type="button" class="btn btn-default btn-sm" onclick="deleteImage('@item');">
+            <span class="glyphicon glyphicon-remove"></span> Remove
+        </button>
+        <a href="@item" target="_blank">
+            <img src="@item" alt="image" class="img-thumbnail">
+        </a><br />
+        @*<div class="deleteDiv">
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+            <img class="deleteIcon" src="~/Images/deleteImage.png" style="width:25px;hight:25px" title="Delete Image"  />
+        </div>*@
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+    }
+
+    using (Html.BeginForm("DeleteAll", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="fileUpload btn btn-default"><span>Delete All Files</span><input type="submit" name="deleteAll" class="upload" /></div>
+    }
+}
+<script>
+    function deleteImage(item) {
+        var url = "/Home/DeleteImage";
+        if (confirm("Are you sure?")) {
+            $.post(url, { Name: item }, function (data) {
+                window.location.href = "/Home/Index";
+            });
+        }
+      
+    }
+
+    function DisplayFilesToUpload() {
+        var element = document.getElementById("file");
+        var html = "";
+
+        html = "<h3>Image(s) to Upload</h3>"
+        for (var i = 0; i < element.files.length; i++) {
+            html += "<strong>" + (i + 1) + "</strong>. File: ";
+            var file = element.files[i];
+            var path = ReadImage(element.files[i]);
+            if ('name' in file) { html += file.name + " (";}
+            if ('size' in file) {html += "size: " + file.size + " bytes)<br>";}
+        }
+
+        html += "<div class='fileUpload btn btn-default'><input type='submit' value='Upload' class='upload'/></div>"
+        document.getElementById("FilesToUpload").innerHTML = html;
+    }
+
+    var ReadImage = function (file) {
+
+        var reader = new FileReader;
+        var image = new Image;
+
+        reader.readAsDataURL(file);
+        reader.onload = function (_file) {
+
+            image.src = _file.target.result;
+            return image.src;
+
+        }
+
+    }
+
+</script>

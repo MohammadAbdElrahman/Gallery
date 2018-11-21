@@ -1,0 +1,60 @@
+﻿body {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+    .fileUpload input.upload {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+
+.deleteDiv {
+    position: relative;
+    top: -160px;
+    left: 130px;
+    width: 30px;
+    height: 30px;
+}
+
+.imageBlock {
+    display: inline-block;
+}
+
+.thumb {
+    width: 159px;
+    height: 159px;
+}
+
+.deleteIcon {
+    width: 30px;
+    height: 30px;
+}
